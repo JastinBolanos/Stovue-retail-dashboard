@@ -1,0 +1,6 @@
+{
+  "name": "Stovue - Retail Control Center",
+  "description": "Centro de comando y control de retail multitienda: gestión masiva de SKUs, pronóstico y alertas de inventario, análisis de carritos abandonados, conversión de ventas y Copilot de IA para retail.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
