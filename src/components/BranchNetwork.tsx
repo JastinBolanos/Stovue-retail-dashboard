@@ -1,7 +1,13 @@
 import React from 'react';
 import { 
   Building2, 
-  MapPin
+  MapPin,
+  Database,
+  Activity,
+  Cpu,
+  Lock,
+  Radio,
+  Server
 } from 'lucide-react';
 import { StoreBranch } from '../types';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
@@ -19,6 +25,39 @@ export const BranchNetwork: React.FC<BranchNetworkProps> = ({
   onSelectBranch
 }) => {
   const nonGlobalBranches = branches.filter(b => b.id !== 'branch-all');
+
+  const getNodeTechConfig = (branch: StoreBranch) => {
+    switch (branch.type) {
+      case 'hub_central':
+        return {
+          icon: Database,
+          label: 'DATABASE / WMS',
+          color: '#00FF41',
+          tag: 'DB-STORAGE'
+        };
+      case 'flagship':
+        return {
+          icon: Activity,
+          label: 'TELEMETRÍA POS',
+          color: '#00F0FF',
+          tag: 'TELEMETRY'
+        };
+      case 'mall_store':
+        return {
+          icon: Cpu,
+          label: 'TECNOLOGÍA / IOT',
+          color: '#FFAA00',
+          tag: 'HARDWARE'
+        };
+      default:
+        return {
+          icon: Lock,
+          label: 'CRIPTOGRAFÍA / EDGE',
+          color: '#00FF41',
+          tag: 'CRYPTO-TLS'
+        };
+    }
+  };
 
   return (
     <div className="space-y-4 pb-8 font-mono-data text-[#E2E2E2]">
@@ -82,24 +121,40 @@ export const BranchNetwork: React.FC<BranchNetworkProps> = ({
         {nonGlobalBranches.map((branch) => {
           const isSelected = selectedBranchId === branch.id;
           const capacityPct = ((branch.inventoryUsed / branch.inventoryCapacity) * 100).toFixed(0);
+          const techConfig = getNodeTechConfig(branch);
+          const TechIcon = techConfig.icon;
 
           return (
             <div 
               key={branch.id}
               onClick={() => onSelectBranch(branch.id)}
-              className={`p-4 border transition-all cursor-pointer space-y-3 ${
+              className={`p-4 border transition-all cursor-pointer space-y-3 group ${
                 isSelected 
                   ? 'bg-[#103319]/20 border-[#00FF41]' 
                   : 'bg-[#0A0A0A] border-[#1A1A1A] hover:border-[#333]'
               }`}
             >
               <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className={`p-2 ${isSelected ? 'bg-[#00FF41] text-black font-bold' : 'bg-[#050505] text-[#888] border border-[#222]'}`}>
-                    <Building2 className="h-4 w-4" />
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <div className={`h-10 w-10 flex items-center justify-center border transition-all ${
+                      isSelected 
+                        ? 'bg-[#00FF41] text-black border-[#00FF41] font-bold' 
+                        : 'bg-gradient-to-br from-[#121216] to-[#070709] text-white border-[#2A2A30] group-hover:border-[#00FF41]'
+                    }`}>
+                      <TechIcon 
+                        className={`h-5 w-5 ${isSelected ? 'text-black' : ''}`}
+                        style={!isSelected ? { color: techConfig.color, filter: `drop-shadow(0 0 4px ${techConfig.color}66)` } : {}}
+                      />
+                    </div>
                   </div>
                   <div>
-                    <h4 className="font-bold text-white text-xs uppercase tracking-tight">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[8px] font-mono uppercase px-1 py-0.2 bg-[#121214] border border-[#262626] text-[#888]">
+                        {techConfig.label}
+                      </span>
+                    </div>
+                    <h4 className="font-bold text-white text-xs uppercase tracking-tight mt-0.5">
                       {branch.name}
                     </h4>
                     <div className="text-[10px] text-[#666] flex items-center gap-1 mt-0.5">

@@ -5,15 +5,12 @@ import {
   ShoppingCart, 
   Percent, 
   ArrowUpRight, 
-  ArrowDownRight, 
-  Clock, 
   Sparkles, 
-  Zap, 
-  AlertCircle, 
   Building2,
   Calendar,
   Activity,
-  Terminal
+  Terminal,
+  Layers
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -24,7 +21,14 @@ import {
   Tooltip, 
   ResponsiveContainer
 } from 'recharts';
-import { HOURLY_SALES_TREND, CONVERSION_FUNNEL_DATA } from '../data/mockData';
+import { 
+  HOURLY_SALES_TREND, 
+  SALES_TREND_7D, 
+  SALES_TREND_30D,
+  CONVERSION_FUNNEL_DATA,
+  CONVERSION_FUNNEL_7D,
+  CONVERSION_FUNNEL_30D
+} from '../data/mockData';
 import { ProductSKU, LiveOrderEvent, StoreBranch } from '../types';
 
 interface DashboardOverviewProps {
@@ -49,12 +53,119 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const currentBranch = branches.find(b => b.id === selectedBranchId) || branches[0];
   const isGlobal = selectedBranchId === 'branch-all';
 
-  // Computed metrics
-  const totalRevenue = isGlobal ? 128450 : currentBranch.revenueToday;
-  const totalOrders = isGlobal ? 642 : currentBranch.ordersToday;
-  const aov = totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : '0.00';
-  const conversionRate = isGlobal ? '4.82%' : '4.15%';
-  const abandonedValue = isGlobal ? 8376 : 2480;
+  // Branch proportion factor for non-global views
+  const branchRatio = isGlobal ? 1 : Math.max(0.12, currentBranch.revenueToday / 128450);
+
+  // Time-frame dynamic computations
+  const getPeriodData = () => {
+    switch (timeRange) {
+      case '7d': {
+        const rawRevenue = isGlobal ? 892300 : Math.round(892300 * branchRatio);
+        const rawOrders = isGlobal ? 4494 : Math.round(4494 * branchRatio);
+        const rawAbandoned = isGlobal ? 58630 : Math.round(58630 * branchRatio);
+        const chartData = SALES_TREND_7D.map(item => ({
+          ...item,
+          revenue: Math.round(item.revenue * branchRatio),
+          orders: Math.round(item.orders * branchRatio)
+        }));
+        return {
+          badge: '● 7-DAY AGGREGATE',
+          chartTitle: '7-Day Revenue & Order Inflow Trajectory',
+          chartSubtitle: 'Daily consolidated multi-channel telemetry streams',
+          timeLabel: '7D',
+          revenueLabel: 'Gross Revenue (7D)',
+          revenue: rawRevenue,
+          orders: rawOrders,
+          growthTag: '+18.7% vs PREV 7D',
+          conversion: isGlobal ? '4.96%' : '4.32%',
+          conversionTag: '+0.74% Benchmark',
+          aov: (rawRevenue / rawOrders).toFixed(2),
+          aovDiff: '+€16.20 MoM',
+          margin: '54.8%',
+          abandoned: rawAbandoned,
+          recoveryRate: '71.4% Rate',
+          chartData,
+          funnelData: CONVERSION_FUNNEL_7D.map((f, i) => ({
+            ...f,
+            count: isGlobal ? f.count : Math.round(f.count * branchRatio)
+          })),
+          velocityMultiplier: 7,
+          velocityUnit: 'u / 7d'
+        };
+      }
+      case '30d': {
+        const rawRevenue = isGlobal ? 3840600 : Math.round(3840600 * branchRatio);
+        const rawOrders = isGlobal ? 19260 : Math.round(19260 * branchRatio);
+        const rawAbandoned = isGlobal ? 251200 : Math.round(251200 * branchRatio);
+        const chartData = SALES_TREND_30D.map(item => ({
+          ...item,
+          revenue: Math.round(item.revenue * branchRatio),
+          orders: Math.round(item.orders * branchRatio)
+        }));
+        return {
+          badge: '● 30-DAY CONSOLIDATED',
+          chartTitle: '30-Day Multi-Week Revenue & Volume Growth',
+          chartSubtitle: 'Aggregated monthly performance across all nodes & digital checkout',
+          timeLabel: '30D',
+          revenueLabel: 'Gross Revenue (30D)',
+          revenue: rawRevenue,
+          orders: rawOrders,
+          growthTag: '+22.4% vs PREV 30D',
+          conversion: isGlobal ? '5.12%' : '4.48%',
+          conversionTag: '+0.90% Benchmark',
+          aov: (rawRevenue / rawOrders).toFixed(2),
+          aovDiff: '+€17.10 MoM',
+          margin: '55.1%',
+          abandoned: rawAbandoned,
+          recoveryRate: '73.8% Rate',
+          chartData,
+          funnelData: CONVERSION_FUNNEL_30D.map((f, i) => ({
+            ...f,
+            count: isGlobal ? f.count : Math.round(f.count * branchRatio)
+          })),
+          velocityMultiplier: 30,
+          velocityUnit: 'u / mo'
+        };
+      }
+      case 'today':
+      default: {
+        const rawRevenue = isGlobal ? 128450 : currentBranch.revenueToday;
+        const rawOrders = isGlobal ? 642 : currentBranch.ordersToday;
+        const rawAbandoned = isGlobal ? 8376 : 2480;
+        const chartData = HOURLY_SALES_TREND.map(item => ({
+          ...item,
+          revenue: Math.round(item.revenue * branchRatio),
+          orders: Math.round(item.orders * branchRatio)
+        }));
+        return {
+          badge: '● LIVE 24H FEED',
+          chartTitle: 'Hourly Revenue Pulse & Order Inflow',
+          chartSubtitle: 'Multi-channel POS + eCommerce digital streams synchronized',
+          timeLabel: '24H',
+          revenueLabel: 'Gross Revenue (24H)',
+          revenue: rawRevenue,
+          orders: rawOrders,
+          growthTag: '+14.2% TARGET',
+          conversion: isGlobal ? '4.82%' : '4.15%',
+          conversionTag: '+0.6% Benchmark',
+          aov: (rawRevenue / rawOrders).toFixed(2),
+          aovDiff: '+€18.40 MoM',
+          margin: '54.2%',
+          abandoned: rawAbandoned,
+          recoveryRate: '68.2% Rate',
+          chartData,
+          funnelData: CONVERSION_FUNNEL_DATA.map((f, i) => ({
+            ...f,
+            count: isGlobal ? f.count : Math.round(f.count * branchRatio)
+          })),
+          velocityMultiplier: 1,
+          velocityUnit: 'u / day'
+        };
+      }
+    }
+  };
+
+  const currentPeriod = getPeriodData();
 
   // Top 5 velocity SKUs
   const topSellingSKUs = [...skus].sort((a, b) => b.salesVelocityDaily - a.salesVelocityDaily).slice(0, 5);
@@ -68,33 +179,45 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <h1 className="text-xl font-bold text-white tracking-tight uppercase">
               Omnichannel Sales & Conversion Matrix
             </h1>
-            <span className="text-[10px] px-2 py-0.5 bg-[#103319] text-[#00FF41] border border-[#00FF41]/40 uppercase tracking-widest">
-              ● LIVE 24H FEED
+            <span className="text-[10px] px-2 py-0.5 bg-[#103319] text-[#00FF41] border border-[#00FF41]/40 uppercase tracking-widest animate-pulse">
+              {currentPeriod.badge}
             </span>
           </div>
           <p className="text-[10px] text-[#666] mt-0.5">
-            NODE: <span className="text-[#00FF41] font-bold">{currentBranch.name.toUpperCase()}</span> • TELEMETRY LATENCY: 12MS
+            NODE: <span className="text-[#00FF41] font-bold">{currentBranch.name.toUpperCase()}</span> • TELEMETRY LATENCY: 12MS • RANGE: <span className="text-white font-bold">{currentPeriod.timeLabel}</span>
           </p>
         </div>
 
-        {/* Time filters & Copilot quick trigger */}
+        {/* Time filters (24H / 7D / 30D) & Copilot quick trigger */}
         <div className="flex items-center gap-2">
           <div className="flex items-center p-0.5 bg-[#0A0A0A] border border-[#1F1F23] text-[10px]">
             <button
               onClick={() => setTimeRange('today')}
-              className={`px-2.5 py-1 uppercase tracking-wider transition ${timeRange === 'today' ? 'bg-white text-black font-bold' : 'text-[#888] hover:text-white'}`}
+              className={`px-3 py-1 uppercase tracking-wider transition-all cursor-pointer ${
+                timeRange === 'today' 
+                  ? 'bg-white text-black font-bold shadow-sm' 
+                  : 'text-[#888] hover:text-white hover:bg-[#151515]'
+              }`}
             >
               24H
             </button>
             <button
               onClick={() => setTimeRange('7d')}
-              className={`px-2.5 py-1 uppercase tracking-wider transition ${timeRange === '7d' ? 'bg-white text-black font-bold' : 'text-[#888] hover:text-white'}`}
+              className={`px-3 py-1 uppercase tracking-wider transition-all cursor-pointer ${
+                timeRange === '7d' 
+                  ? 'bg-white text-black font-bold shadow-sm' 
+                  : 'text-[#888] hover:text-white hover:bg-[#151515]'
+              }`}
             >
               7D
             </button>
             <button
               onClick={() => setTimeRange('30d')}
-              className={`px-2.5 py-1 uppercase tracking-wider transition ${timeRange === '30d' ? 'bg-white text-black font-bold' : 'text-[#888] hover:text-white'}`}
+              className={`px-3 py-1 uppercase tracking-wider transition-all cursor-pointer ${
+                timeRange === '30d' 
+                  ? 'bg-white text-black font-bold shadow-sm' 
+                  : 'text-[#888] hover:text-white hover:bg-[#151515]'
+              }`}
             >
               30D
             </button>
@@ -114,59 +237,59 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         
         {/* KPI 1: Total Revenue */}
-        <div className="p-4 bg-[#0F0F11] border border-[#1F1F23]">
+        <div className="p-4 bg-[#0F0F11] border border-[#1F1F23] transition-all hover:border-[#333]">
           <div className="flex items-center justify-between text-[#666] text-[10px] uppercase tracking-wider font-bold">
-            <span>Gross Revenue (24h)</span>
+            <span>{currentPeriod.revenueLabel}</span>
             <div className="p-1 bg-[#103319] text-[#00FF41] border border-[#00FF41]/30">
               <DollarSign className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-mono text-[#00FF41] mt-2">
-            €{totalRevenue.toLocaleString('es-ES')}
+          <div className="text-2xl font-mono text-[#00FF41] mt-2 font-bold tracking-tight">
+            €{currentPeriod.revenue.toLocaleString('es-ES')}
           </div>
           <div className="flex items-center justify-between mt-2 text-[10px]">
             <span className="text-[#00FF41] flex items-center gap-0.5">
-              <ArrowUpRight className="h-3 w-3" /> +14.2% TARGET
+              <ArrowUpRight className="h-3 w-3" /> {currentPeriod.growthTag}
             </span>
-            <span className="text-[#666]">{totalOrders} Orders</span>
+            <span className="text-[#666]">{currentPeriod.orders.toLocaleString('es-ES')} Orders</span>
           </div>
         </div>
 
         {/* KPI 2: Conversion Rate */}
-        <div className="p-4 bg-[#0F0F11] border border-[#1F1F23]">
+        <div className="p-4 bg-[#0F0F11] border border-[#1F1F23] transition-all hover:border-[#333]">
           <div className="flex items-center justify-between text-[#666] text-[10px] uppercase tracking-wider font-bold">
             <span>Checkout Conversion</span>
             <div className="p-1 bg-[#16161A] text-white border border-[#333]">
               <Percent className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-mono text-white mt-2">
-            {conversionRate}
+          <div className="text-2xl font-mono text-white mt-2 font-bold tracking-tight">
+            {currentPeriod.conversion}
           </div>
           <div className="flex items-center justify-between mt-2 text-[10px]">
             <span className="text-[#00FF41] flex items-center gap-0.5">
-              <ArrowUpRight className="h-3 w-3" /> +0.6% Benchmark
+              <ArrowUpRight className="h-3 w-3" /> {currentPeriod.conversionTag}
             </span>
             <span className="text-[#666]">Goal: 4.0%</span>
           </div>
         </div>
 
         {/* KPI 3: Average Order Value (AOV) */}
-        <div className="p-4 bg-[#0F0F11] border border-[#1F1F23]">
+        <div className="p-4 bg-[#0F0F11] border border-[#1F1F23] transition-all hover:border-[#333]">
           <div className="flex items-center justify-between text-[#666] text-[10px] uppercase tracking-wider font-bold">
             <span>Avg Ticket (AOV)</span>
             <div className="p-1 bg-[#16161A] text-white border border-[#333]">
               <TrendingUp className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-mono text-white mt-2">
-            €{aov}
+          <div className="text-2xl font-mono text-white mt-2 font-bold tracking-tight">
+            €{currentPeriod.aov}
           </div>
           <div className="flex items-center justify-between mt-2 text-[10px]">
             <span className="text-[#00FF41] flex items-center gap-0.5">
-              <ArrowUpRight className="h-3 w-3" /> +€18.40 MoM
+              <ArrowUpRight className="h-3 w-3" /> {currentPeriod.aovDiff}
             </span>
-            <span className="text-[#666]">Margin: 54.2%</span>
+            <span className="text-[#666]">Margin: {currentPeriod.margin}</span>
           </div>
         </div>
 
@@ -181,14 +304,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               <ShoppingCart className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-mono text-[#FFAA00] mt-2">
-            €{abandonedValue.toLocaleString('es-ES')}
+          <div className="text-2xl font-mono text-[#FFAA00] mt-2 font-bold tracking-tight">
+            €{currentPeriod.abandoned.toLocaleString('es-ES')}
           </div>
           <div className="flex items-center justify-between mt-2 text-[10px]">
             <span className="text-[#FFAA00] flex items-center gap-0.5 underline">
               AI Recover →
             </span>
-            <span className="text-[#666]">68.2% Rate</span>
+            <span className="text-[#666]">{currentPeriod.recoveryRate}</span>
           </div>
         </div>
 
@@ -197,18 +320,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       {/* Main Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         
-        {/* Left 8 Cols: Hourly Revenue & Orders Trend (Recharts AreaChart) */}
+        {/* Left 8 Cols: Revenue & Orders Trend (Recharts AreaChart) */}
         <div className="lg:col-span-8 p-4 bg-[#0A0A0A] border border-[#1A1A1A]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-2 border-b border-[#1A1A1A]">
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-[#555] font-mono">01 //</span>
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                  Hourly Revenue Pulse & Order Inflow
+                  {currentPeriod.chartTitle}
                 </h3>
               </div>
               <p className="text-[10px] text-[#666] mt-0.5">
-                Multi-channel POS + eCommerce digital streams synchronized
+                {currentPeriod.chartSubtitle}
               </p>
             </div>
             <div className="flex items-center gap-3 text-[10px]">
@@ -225,10 +348,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={HOURLY_SALES_TREND} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={currentPeriod.chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00FF41" stopOpacity={0.3} />
+                    <stop offset="5%" stopColor="#00FF41" stopOpacity={0.35} />
                     <stop offset="95%" stopColor="#00FF41" stopOpacity={0.0} />
                   </linearGradient>
                   <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
@@ -237,8 +360,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="2 2" stroke="#1A1A1A" vertical={false} />
-                <XAxis dataKey="hour" stroke="#444" tick={{ fontSize: 10, fill: '#666' }} />
-                <YAxis stroke="#444" tick={{ fontSize: 10, fill: '#666' }} />
+                <XAxis dataKey="time" stroke="#444" tick={{ fontSize: 10, fill: '#888' }} />
+                <YAxis stroke="#444" tick={{ fontSize: 10, fill: '#888' }} />
                 <Tooltip 
                   contentStyle={{ 
                     backgroundColor: '#050505', 
@@ -324,21 +447,21 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-[#555] font-mono">03 //</span>
               <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                Checkout Funnel Dropout Telemetry
+                Checkout Funnel Telemetry ({currentPeriod.timeLabel})
               </h3>
             </div>
             <button
               onClick={() => onNavigateTab('carts')}
-              className="text-[10px] text-[#00FF41] hover:underline uppercase"
+              className="text-[10px] text-[#00FF41] hover:underline uppercase cursor-pointer"
             >
               View Dropouts →
             </button>
           </div>
 
           <div className="space-y-2">
-            {CONVERSION_FUNNEL_DATA.map((step, idx) => {
-              const maxCount = CONVERSION_FUNNEL_DATA[0].count;
-              const pctOfTotal = ((step.count / maxCount) * 100).toFixed(1);
+            {currentPeriod.funnelData.map((step, idx) => {
+              const maxCount = currentPeriod.funnelData[0].count;
+              const pctOfTotal = maxCount > 0 ? ((step.count / maxCount) * 100).toFixed(1) : '0.0';
               return (
                 <div key={idx} className="p-2.5 bg-[#050505] border border-[#1A1A1A]">
                   <div className="flex items-center justify-between text-[10px]">
@@ -377,12 +500,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-[#555] font-mono">04 //</span>
               <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                Top Velocity SKUs (Units / Day)
+                Top Velocity SKUs ({currentPeriod.velocityUnit})
               </h3>
             </div>
             <button
               onClick={() => onNavigateTab('skus')}
-              className="text-[10px] text-[#00FF41] hover:underline uppercase"
+              className="text-[10px] text-[#00FF41] hover:underline uppercase cursor-pointer"
             >
               Full Master SKU →
             </button>
@@ -391,6 +514,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           <div className="space-y-2">
             {topSellingSKUs.map((sku, rank) => {
               const grossMargin = (((sku.retailPrice - sku.costPrice) / sku.retailPrice) * 100).toFixed(0);
+              const computedVelocity = (sku.salesVelocityDaily * currentPeriod.velocityMultiplier).toFixed(1);
               return (
                 <div 
                   key={sku.id}
@@ -417,7 +541,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                   <div className="text-right">
                     <div className="text-xs font-mono text-[#00FF41]">
-                      {sku.salesVelocityDaily} u/day
+                      {computedVelocity} {currentPeriod.velocityUnit}
                     </div>
                     <div className="text-[9px] text-[#888]">
                       Margin: {grossMargin}% (+€{sku.retailPrice - sku.costPrice})

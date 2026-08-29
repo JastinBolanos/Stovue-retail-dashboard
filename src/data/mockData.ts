@@ -705,15 +705,34 @@ export const USER_PROFILES: UserProfile[] = [
 ];
 
 export const HOURLY_SALES_TREND = [
-  { hour: '06:00', revenue: 3200, orders: 18, conversion: 2.1, abandoned: 8 },
-  { hour: '08:00', revenue: 7800, orders: 42, conversion: 2.8, abandoned: 15 },
-  { hour: '10:00', revenue: 14500, orders: 76, conversion: 3.6, abandoned: 28 },
-  { hour: '12:00', revenue: 21400, orders: 112, conversion: 4.2, abandoned: 44 },
-  { hour: '14:00', revenue: 18900, orders: 94, conversion: 3.9, abandoned: 36 },
-  { hour: '16:00', revenue: 24600, orders: 128, conversion: 4.5, abandoned: 52 },
-  { hour: '18:00', revenue: 31200, orders: 165, conversion: 4.9, abandoned: 68 },
-  { hour: '20:00', revenue: 26800, orders: 140, conversion: 4.7, abandoned: 58 },
-  { hour: '22:00', revenue: 16500, orders: 85, conversion: 3.8, abandoned: 32 },
+  { time: '06:00', revenue: 3200, orders: 18, conversion: 2.1, abandoned: 8 },
+  { time: '08:00', revenue: 7800, orders: 42, conversion: 2.8, abandoned: 15 },
+  { time: '10:00', revenue: 14500, orders: 76, conversion: 3.6, abandoned: 28 },
+  { time: '12:00', revenue: 21400, orders: 112, conversion: 4.2, abandoned: 44 },
+  { time: '14:00', revenue: 18900, orders: 94, conversion: 3.9, abandoned: 36 },
+  { time: '16:00', revenue: 24600, orders: 128, conversion: 4.5, abandoned: 52 },
+  { time: '18:00', revenue: 31200, orders: 165, conversion: 4.9, abandoned: 68 },
+  { time: '20:00', revenue: 26800, orders: 140, conversion: 4.7, abandoned: 58 },
+  { time: '22:00', revenue: 16500, orders: 85, conversion: 3.8, abandoned: 32 },
+];
+
+export const SALES_TREND_7D = [
+  { time: 'Lun (D-6)', revenue: 114200, orders: 580, conversion: 4.6, abandoned: 74 },
+  { time: 'Mar (D-5)', revenue: 121500, orders: 610, conversion: 4.7, abandoned: 69 },
+  { time: 'Mié (D-4)', revenue: 118900, orders: 595, conversion: 4.8, abandoned: 65 },
+  { time: 'Jue (D-3)', revenue: 129400, orders: 652, conversion: 4.9, abandoned: 81 },
+  { time: 'Vie (D-2)', revenue: 148200, orders: 740, conversion: 5.2, abandoned: 94 },
+  { time: 'Sáb (D-1)', revenue: 162100, orders: 812, conversion: 5.4, abandoned: 108 },
+  { time: 'Dom (Hoy)', revenue: 138000, orders: 695, conversion: 5.1, abandoned: 88 },
+];
+
+export const SALES_TREND_30D = [
+  { time: 'Días 01-05', revenue: 615000, orders: 3080, conversion: 4.7, abandoned: 390 },
+  { time: 'Días 06-10', revenue: 642000, orders: 3220, conversion: 4.9, abandoned: 410 },
+  { time: 'Días 11-15', revenue: 678000, orders: 3410, conversion: 5.0, abandoned: 435 },
+  { time: 'Días 16-20', revenue: 692000, orders: 3490, conversion: 5.2, abandoned: 450 },
+  { time: 'Días 21-25', revenue: 735000, orders: 3700, conversion: 5.3, abandoned: 480 },
+  { time: 'Días 26-30', revenue: 788000, orders: 3960, conversion: 5.5, abandoned: 510 },
 ];
 
 export const CONVERSION_FUNNEL_DATA = [
@@ -722,6 +741,22 @@ export const CONVERSION_FUNNEL_DATA = [
   { stage: '3. Añadido a Carrito', count: 6840, dropRate: 71.7, fill: '#8b5cf6' },
   { stage: '4. Checkout Iniciado', count: 3290, dropRate: 51.9, fill: '#ec4899' },
   { stage: '5. Ventas Completadas', count: 2180, dropRate: 33.7, fill: '#10b981' },
+];
+
+export const CONVERSION_FUNNEL_7D = [
+  { stage: '1. Visitas a Catálogo', count: 342000, dropRate: 0, fill: '#3b82f6' },
+  { stage: '2. Vistas de Producto (PDP)', count: 171000, dropRate: 50.0, fill: '#6366f1' },
+  { stage: '3. Añadido a Carrito', count: 49200, dropRate: 71.2, fill: '#8b5cf6' },
+  { stage: '4. Checkout Iniciado', count: 23800, dropRate: 51.6, fill: '#ec4899' },
+  { stage: '5. Ventas Completadas', count: 16100, dropRate: 32.4, fill: '#10b981' },
+];
+
+export const CONVERSION_FUNNEL_30D = [
+  { stage: '1. Visitas a Catálogo', count: 1480000, dropRate: 0, fill: '#3b82f6' },
+  { stage: '2. Vistas de Producto (PDP)', count: 745000, dropRate: 49.7, fill: '#6366f1' },
+  { stage: '3. Añadido a Carrito', count: 215000, dropRate: 71.1, fill: '#8b5cf6' },
+  { stage: '4. Checkout Iniciado', count: 104200, dropRate: 51.5, fill: '#ec4899' },
+  { stage: '5. Ventas Completadas', count: 72400, dropRate: 30.5, fill: '#10b981' },
 ];
 
 export const BRANCH_COMPARISON_DATA = [

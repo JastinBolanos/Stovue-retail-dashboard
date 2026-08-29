@@ -16,11 +16,22 @@ import {
   Radio,
   Terminal,
   Activity,
-  Cpu
+  Cpu,
+  Server,
+  Network,
+  Database,
+  Lock,
+  KeyRound,
+  Binary,
+  ScanLine,
+  Workflow,
+  Wifi,
+  Bot
 } from 'lucide-react';
-import { USER_PROFILES } from '../data/mockData';
+import { INITIAL_BRANCHES, USER_PROFILES } from '../data/mockData';
 import { UserProfile } from '../types';
 import { LanguageToggle } from './LanguageToggle';
+import { EnterpriseLoginModal } from './EnterpriseLoginModal';
 import { useLanguage } from '../context/LanguageContext';
 import confetti from 'canvas-confetti';
 
@@ -30,10 +41,12 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
   const { t, language } = useLanguage();
-  const [selectedRole, setSelectedRole] = useState<UserProfile>(USER_PROFILES[0]);
   const [isEntering, setIsEntering] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const handleEnterApp = (profile: UserProfile) => {
+  const defaultProfile = USER_PROFILES[0];
+
+  const handleEnterApp = (profile: UserProfile = defaultProfile) => {
     setIsEntering(true);
     confetti({
       particleCount: 70,
@@ -45,6 +58,69 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
       onEnter(profile);
     }, 350);
   };
+
+  const operationalNodes = [
+    {
+      code: 'MAD-HUB',
+      category: language === 'es' ? 'BASE DE DATOS & WMS' : 'DATABASE & WMS CORE',
+      name: language === 'es' ? 'Hub Logístico Central Madrid' : 'Central Logistics Hub Madrid',
+      type: language === 'es' ? 'WMS & Distribución Automatizada' : 'WMS & Automated Fulfillment',
+      metric: language === 'es' ? 'Capacidad: 19,800/25,000 SKUs (79.2%)' : 'Holding: 19,800/25,000 SKUs (79.2%)',
+      status: language === 'es' ? 'ONLINE • 100%' : 'ONLINE • 100%',
+      color: '#00FF41',
+      latency: '8ms',
+      techDomain: 'database',
+      icon: Database,
+      tag: 'DATABASE',
+      accentColor: '#00FF41',
+      badgeClass: 'text-[#00FF41] border-[#00FF41]/40 bg-[#00FF41]/10'
+    },
+    {
+      code: 'BCN-01',
+      category: language === 'es' ? 'TELEMETRÍA LOGÍSTICA' : 'LIVE TELEMETRY STREAM',
+      name: language === 'es' ? 'Flagship Store Paseo de Gracia' : 'Flagship Store Paseo de Gracia',
+      type: language === 'es' ? 'POS Cluster • 28 Cajas Físicas' : 'POS Cluster • 28 Active Lanes',
+      metric: language === 'es' ? '184 Órdenes Hoy • AOV: €230' : '184 Daily Orders • AOV: €230',
+      status: language === 'es' ? 'SYNC POS' : 'SYNC POS',
+      color: '#00F0FF',
+      latency: '12ms',
+      techDomain: 'telemetry',
+      icon: Activity,
+      tag: 'TELEMETRY',
+      accentColor: '#00F0FF',
+      badgeClass: 'text-[#00F0FF] border-[#00F0FF]/40 bg-[#00F0FF]/10'
+    },
+    {
+      code: 'VLC-02',
+      category: language === 'es' ? 'TECNOLOGÍA & IOT' : 'TECH & HARDWARE IOT',
+      name: language === 'es' ? 'Boutique Tech Mall El Saler' : 'Boutique Tech Mall El Saler',
+      type: language === 'es' ? 'Click & Collect • Retail Físico' : 'Click & Collect • In-Store Retail',
+      metric: language === 'es' ? '96 Órdenes Hoy • 14 Operadores' : '96 Daily Orders • 14 Staff',
+      status: language === 'es' ? 'ACTIVO' : 'ACTIVE',
+      color: '#FFAA00',
+      latency: '15ms',
+      techDomain: 'technology',
+      icon: Cpu,
+      tag: 'TECH / IOT',
+      accentColor: '#FFAA00',
+      badgeClass: 'text-[#FFAA00] border-[#FFAA00]/40 bg-[#FFAA00]/10'
+    },
+    {
+      code: 'DIGITAL-01',
+      category: language === 'es' ? 'CRIPTOGRAFÍA TLS 1.3' : 'CRYPTOGRAPHY EDGE',
+      name: language === 'es' ? 'Canal E-Commerce Cloud Edge' : 'Omnichannel E-Commerce Edge',
+      type: language === 'es' ? 'CDN Global & Checkout Gateway' : 'Global CDN & Checkout Gateway',
+      metric: language === 'es' ? '642 Transacciones • SLA 99.99%' : '642 Checkouts • SLA 99.99%',
+      status: language === 'es' ? 'NOMINAL' : 'NOMINAL',
+      color: '#00FF41',
+      latency: '14ms',
+      techDomain: 'cryptography',
+      icon: Lock,
+      tag: 'CRYPTO',
+      accentColor: '#00FF41',
+      badgeClass: 'text-[#00FF41] border-[#00FF41]/40 bg-[#00FF41]/10'
+    }
+  ];
 
   return (
     <div className="relative min-h-screen w-full bg-[#050505] text-[#E2E2E2] font-mono-data overflow-x-hidden flex flex-col justify-between selection:bg-[#00FF41] selection:text-[#050505]">
@@ -71,7 +147,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
           </div>
           
           <button
-            onClick={() => handleEnterApp(selectedRole)}
+            onClick={() => setIsLoginModalOpen(true)}
             className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white text-black text-xs font-bold uppercase tracking-tighter hover:bg-[#00FF41] transition-colors cursor-pointer"
           >
             {t('btn.enterTerminal')}
@@ -97,9 +173,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
               <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white leading-tight tracking-tight">
                 {t('welcome.greeting')}<br />
                 <span className="font-bold italic text-[#00FF41]">
-                  {selectedRole.role === 'executive_ceo' ? t('welcome.ceo') : 
-                   selectedRole.role === 'supply_chain_lead' ? t('welcome.supply') :
-                   selectedRole.role === 'growth_analyst' ? t('welcome.growth') : t('welcome.store')}
+                  {t('welcome.ceo')}
                 </span>
               </h3>
               <p className="text-xs sm:text-sm text-[#888] max-w-2xl leading-relaxed">
@@ -135,7 +209,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3">
               <button
                 id="btn-enter-command-center"
-                onClick={() => handleEnterApp(selectedRole)}
+                onClick={() => setIsLoginModalOpen(true)}
                 disabled={isEntering}
                 className="px-6 py-3.5 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-[#00FF41] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
@@ -145,7 +219,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
               </button>
 
               <button
-                onClick={() => handleEnterApp(USER_PROFILES[0])}
+                onClick={() => handleEnterApp(defaultProfile)}
                 className="px-5 py-3.5 bg-[#0A0A0A] hover:bg-[#141414] text-white text-xs font-bold uppercase tracking-widest border border-[#333] hover:border-[#00FF41] transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Cpu className="h-4 w-4 text-[#00FF41]" />
@@ -155,63 +229,80 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
 
           </div>
 
-          {/* Right Column: High Density Profile Matrix */}
+          {/* Right Column: Live Nodes & Logistics Telemetry Monitor */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="p-5 bg-[#0A0A0A] border border-[#1A1A1A] relative">
+            <div className="p-5 bg-[#0A0A0A] border border-[#1A1A1A] relative shadow-xl">
               <div className="flex items-center justify-between pb-3 border-b border-[#1A1A1A]">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-[#00FF41]" />
+                  <Network className="h-4 w-4 text-[#00FF41]" />
                   <span className="text-xs uppercase font-bold tracking-wider text-white">
-                    {t('profile.select')}
+                    {t('nodes.monitorTitle')}
                   </span>
                 </div>
-                <span className="text-[10px] text-[#00FF41] uppercase tracking-widest">
-                  {t('profile.rbac')}
+                <span className="text-[10px] text-[#00FF41] uppercase tracking-widest font-bold flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#00FF41] animate-pulse"></span>
+                  {t('nodes.monitorCluster')}
                 </span>
               </div>
 
-              {/* Roles List */}
-              <div className="space-y-2 mt-4">
-                {USER_PROFILES.map((profile, idx) => {
-                  const isSelected = selectedRole.id === profile.id;
+              {/* Operational Nodes Telemetry List */}
+              <div className="space-y-2.5 mt-4">
+                {operationalNodes.map((node) => {
+                  const NodeIcon = node.icon;
                   return (
                     <div
-                      key={profile.id}
-                      onClick={() => setSelectedRole(profile)}
-                      className={`p-3 border transition-all cursor-pointer flex items-center justify-between ${
-                        isSelected 
-                          ? 'bg-[#111] border-l-2 border-l-[#00FF41] border-t-[#1F1F23] border-r-[#1F1F23] border-b-[#1F1F23]' 
-                          : 'bg-[#080808] border-[#16161A] hover:bg-[#0F0F11] hover:border-[#222]'
-                      }`}
+                      key={node.code}
+                      className="p-3 bg-[#080808] border border-[#16161A] hover:border-[#2A2A2A] transition-all flex items-center justify-between group"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] text-[#555] font-mono">0{idx + 1}</span>
-                        <img 
-                          src={profile.avatar} 
-                          alt={profile.name} 
-                          className={`h-9 w-9 object-cover border ${
-                            isSelected ? 'border-[#00FF41]' : 'border-[#2A2A2A]'
-                          }`}
-                        />
-                        <div>
-                          <div className="text-xs font-bold text-white flex items-center gap-2">
-                            {profile.name}
-                            {isSelected && (
-                              <span className="text-[9px] text-[#00FF41]">{t('profile.selected')}</span>
-                            )}
+                        {/* High-Tech Visual Icon Box for Database, Telemetry, Tech/IoT, Cryptography */}
+                        <div className="relative group/box shrink-0">
+                          <div className="h-10 w-10 sm:h-11 sm:w-11 bg-gradient-to-br from-[#121216] to-[#070709] border border-[#25252B] group-hover:border-[#00FF41] flex flex-col items-center justify-center relative overflow-hidden transition-all shadow-inner">
+                            {/* Subtle cyber grid backdrop */}
+                            <div className="absolute inset-0 bg-[radial-gradient(#00FF41_1px,transparent_1px)] [background-size:6px_6px] opacity-15 pointer-events-none" />
+                            
+                            {/* Technology / Database / Telemetry / Cryptography Visual Icon */}
+                            <NodeIcon 
+                              className="h-5 w-5 transition-transform group-hover:scale-110 relative z-10" 
+                              style={{ 
+                                color: node.accentColor,
+                                filter: `drop-shadow(0 0 6px ${node.accentColor}66)`
+                              }} 
+                            />
+                            
+                            {/* Terminal corner tech accents */}
+                            <span className="absolute top-0.5 left-0.5 w-1 h-1 border-t border-l border-[#00FF41]/40" />
+                            <span className="absolute bottom-0.5 right-0.5 w-1 h-1 border-b border-r border-[#00FF41]/40" />
                           </div>
-                          <div className="text-[10px] text-[#888]">{profile.title}</div>
-                          <div className="text-[9px] text-[#555] mt-0.5">
-                            {t('profile.node')}: {profile.assignedBranch}
+                        </div>
+
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-white group-hover:text-[#00FF41] transition-colors">
+                              {node.name}
+                            </span>
+                            <span className="text-[9px] font-mono px-1 bg-[#141414] border border-[#222] text-[#888]">
+                              {node.code}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className={`text-[8px] font-mono font-bold px-1 py-0.2 border uppercase ${node.badgeClass}`}>
+                              {node.category}
+                            </span>
+                            <span className="text-[10px] text-[#888]">{node.type}</span>
+                          </div>
+                          <div className="text-[9px] text-[#555] font-mono mt-0.5">
+                            {node.metric}
                           </div>
                         </div>
                       </div>
 
-                      <div>
-                        <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 ${
-                          isSelected ? 'bg-[#103319] text-[#00FF41] border border-[#00FF41]/40' : 'bg-[#16161A] text-[#666]'
-                        }`}>
-                          {isSelected ? t('profile.active') : t('profile.choose')}
+                      <div className="text-right shrink-0 pl-2">
+                        <span className="text-[9px] uppercase tracking-wider px-2 py-0.5 bg-[#103319] text-[#00FF41] border border-[#00FF41]/40 font-bold block">
+                          {node.status}
+                        </span>
+                        <span className="text-[8px] text-[#555] font-mono block mt-1">
+                          {node.latency}
                         </span>
                       </div>
                     </div>
@@ -219,23 +310,29 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
                 })}
               </div>
 
-              {/* Security Telemetry Footer */}
+              {/* Security & Transport Telemetry Footer */}
               <div className="mt-4 p-2.5 bg-[#050505] border border-[#1A1A1A] text-[10px] text-[#666] flex items-center justify-between">
-                <span>ENCRYPT: AES-GCM-256</span>
-                <span className="text-[#00FF41]">LATENCY: 14ms</span>
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#00FF41]" />
+                  <span>ENCRYPT: TLS 1.3 • AES-GCM-256</span>
+                </span>
+                <span className="text-[#00FF41] font-bold">LATENCY: 14ms</span>
               </div>
             </div>
 
-            {/* Quick Feature Matrix Badges */}
+            {/* Quick Feature Matrix Badges with Tech Icons */}
             <div className="grid grid-cols-3 gap-2 text-[10px] text-[#777]">
-              <div className="p-2 bg-[#0A0A0A] border border-[#1A1A1A] text-center">
-                <span className="text-[#00FF41]">01 //</span> RECHARTS
+              <div className="p-2 bg-[#0A0A0A] border border-[#1A1A1A] flex items-center justify-center gap-1.5 hover:border-[#333] transition-colors">
+                <BarChart3 className="h-3.5 w-3.5 text-[#00FF41]" />
+                <span className="text-white font-mono font-bold">RECHARTS</span>
               </div>
-              <div className="p-2 bg-[#0A0A0A] border border-[#1A1A1A] text-center">
-                <span className="text-[#00FF41]">02 //</span> SKU AUDIT
+              <div className="p-2 bg-[#0A0A0A] border border-[#1A1A1A] flex items-center justify-center gap-1.5 hover:border-[#333] transition-colors">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#00F0FF]" />
+                <span className="text-white font-mono font-bold">SKU AUDIT</span>
               </div>
-              <div className="p-2 bg-[#0A0A0A] border border-[#1A1A1A] text-center">
-                <span className="text-[#00FF41]">03 //</span> AI COPILOT
+              <div className="p-2 bg-[#0A0A0A] border border-[#1A1A1A] flex items-center justify-center gap-1.5 hover:border-[#333] transition-colors">
+                <Bot className="h-3.5 w-3.5 text-[#FFAA00]" />
+                <span className="text-white font-mono font-bold">AI COPILOT</span>
               </div>
             </div>
 
@@ -250,11 +347,17 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
           STOVUE COMMERCE COMMAND • HIGH DENSITY ARCHITECTURE v.9.4.2-LST
         </div>
         <div className="flex items-center gap-4 text-[#555]">
-          <span>PORT: 3000</span>
           <span>CLUSTER: US-EAST</span>
           <span className="text-[#00FF41]">STATUS: 100% OPERATIONAL</span>
         </div>
       </footer>
+
+      {/* Enterprise Login Blocking Modal */}
+      <EnterpriseLoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onEnterDemo={() => handleEnterApp(defaultProfile)}
+      />
     </div>
   );
 };

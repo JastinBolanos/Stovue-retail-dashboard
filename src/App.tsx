@@ -7,6 +7,7 @@ import { SKUManagement } from './components/SKUManagement';
 import { InventoryAlerts } from './components/InventoryAlerts';
 import { AbandonedCarts } from './components/AbandonedCarts';
 import { BranchNetwork } from './components/BranchNetwork';
+import { RetailCopilotView } from './components/RetailCopilotView';
 import { RetailCopilotModal } from './components/RetailCopilotModal';
 import { CreateSKUModal } from './components/CreateSKUModal';
 import { useRetailEngine } from './hooks/useRetailEngine';
@@ -138,6 +139,17 @@ export default function App() {
               branches={branches}
               selectedBranchId={selectedBranchId}
               onSelectBranch={setSelectedBranchId}
+            />
+          )}
+
+          {activeTab === 'copilot' && (
+            <RetailCopilotView
+              skus={skus}
+              branches={branches}
+              abandonedCarts={abandonedCarts}
+              purchaseOrders={purchaseOrders}
+              onNavigateTab={setActiveTab}
+              onBulkUpdatePrice={handleBulkUpdatePrice}
             />
           )}
         </main>
