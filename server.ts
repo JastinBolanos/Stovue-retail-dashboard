@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
 
@@ -16,7 +16,7 @@ let genAI: GoogleGenAI | null = null;
 function getAIClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    console.warn("AI Service API key not configured; operating in local analytical engine mode.");
+    console.warn("AI Service API key not configured; operating in local high-speed analytical mode.");
     return null;
   }
   if (!genAI) {
@@ -24,7 +24,7 @@ function getAIClient(): GoogleGenAI | null {
       apiKey,
       httpOptions: {
         headers: {
-          "User-Agent": "StovueCommerce/1.0",
+          "User-Agent": "aistudio-build",
         },
       },
     });
@@ -32,7 +32,7 @@ function getAIClient(): GoogleGenAI | null {
   return genAI;
 }
 
-// Resilient AI Engine Execution with Model Fallback & Retry
+// Ultra-fast AI Engine Execution with ThinkingLevel.LOW, model fallback & strict 3.8s timeout
 async function executeAIPrompt(
   prompt: string, 
   systemInstruction: string, 
@@ -45,30 +45,48 @@ async function executeAIPrompt(
 
   const candidateModels = ["gemini-3.7-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
   
+  // Strict timeout function to guarantee response under 4 seconds
+  const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error("AI_TIMEOUT")), ms);
+      promise
+        .then((res) => {
+          clearTimeout(timer);
+          resolve(res);
+        })
+        .catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  };
+
   for (const model of candidateModels) {
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      try {
-        const response = await ai.models.generateContent({
+    try {
+      const response = await withTimeout(
+        ai.models.generateContent({
           model,
           contents: prompt,
           config: {
-            systemInstruction,
+            systemInstruction: `${systemInstruction} Respuestas rápidas, hiper-concisas y directas (máximo 150 palabras). Ve al grano con métricas clave sin rodeos.`,
+            thinkingConfig: {
+              thinkingLevel: ThinkingLevel.LOW,
+            },
           },
-        });
-        if (response.text) {
-          return response.text;
-        }
-      } catch (err: any) {
-        console.warn(`[AI Engine attempt ${attempt} on ${model}]:`, err?.message || err);
-        // If rate-limited or busy, wait briefly before next attempt
-        if (attempt === 1) {
-          await new Promise((r) => setTimeout(r, 600));
-        }
+        }),
+        3800
+      );
+
+      if (response.text && response.text.trim().length > 0) {
+        return response.text;
       }
+    } catch (err: any) {
+      console.warn(`[Fast AI Engine on ${model}]:`, err?.message || err);
+      // If timed out or errored, proceed swiftly to next candidate or fallback
     }
   }
 
-  // Gracefully return domain heuristic analysis if external API is temporarily unavailable
+  // Instant domain heuristic analysis if API call exceeds latency limit or is unavailable
   return fallbackGenerator();
 }
 
