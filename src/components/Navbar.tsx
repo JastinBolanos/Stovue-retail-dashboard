@@ -14,6 +14,7 @@ import {
 import { StoreBranch, UserProfile } from '../types';
 import { LanguageToggle } from './LanguageToggle';
 import { useLanguage } from '../context/LanguageContext';
+import { EcgPulseDot } from './EcgPulseDot';
 
 interface NavbarProps {
   currentProfile: UserProfile;
@@ -51,10 +52,10 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="font-black text-base tracking-tighter text-white">STOVUE</span>
               <span className="text-[9px] uppercase tracking-widest text-[#666]">[COMMAND]</span>
-              <span className="h-1.5 w-1.5 rounded-full bg-[#00FF41] animate-pulse" />
+              <EcgPulseDot size="sm" className="ml-0.5" />
             </div>
             <div className="text-[9px] text-[#00FF41] uppercase tracking-wider flex items-center gap-1">
               {t('nav.systemNominal')}

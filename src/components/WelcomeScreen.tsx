@@ -33,6 +33,7 @@ import { UserProfile } from '../types';
 import { LanguageToggle } from './LanguageToggle';
 import { EnterpriseLoginModal } from './EnterpriseLoginModal';
 import { useLanguage } from '../context/LanguageContext';
+import { EcgPulseDot } from './EcgPulseDot';
 import confetti from 'canvas-confetti';
 
 interface WelcomeScreenProps {
@@ -131,9 +132,9 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onEnter }) => {
       {/* Top Header Bar */}
       <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-[#1A1A1A] bg-[#050505]/90">
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-white leading-none">STOVUE</h1>
-            <span className="h-2 w-2 rounded-full bg-[#00FF41] animate-pulse" />
+            <EcgPulseDot size="lg" className="ml-1 -mt-1" />
           </div>
           <h2 className="text-[10px] font-mono tracking-[0.3em] text-[#666] uppercase">{t('app.tagline')}</h2>
         </div>

@@ -43,7 +43,12 @@ async function executeAIPrompt(
     return fallbackGenerator();
   }
 
-  const candidateModels = ["gemini-3.7-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
+  // Primary fast & high availability models; flash-lite is fastest and least prone to 503 high demand
+  const candidateModels = [
+    "gemini-3.1-flash-lite", 
+    "gemini-flash-latest", 
+    "gemini-3.7-flash"
+  ];
   
   // Strict timeout function to guarantee response under 4 seconds
   const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
@@ -63,30 +68,41 @@ async function executeAIPrompt(
 
   for (const model of candidateModels) {
     try {
+      const is37 = model === "gemini-3.7-flash";
+      const config: any = {
+        systemInstruction: `${systemInstruction} Respuestas rápidas, hiper-concisas y directas (máximo 150 palabras). Ve al grano con métricas clave sin rodeos.`,
+      };
+
+      if (is37) {
+        config.thinkingConfig = {
+          thinkingLevel: ThinkingLevel.LOW,
+        };
+      }
+
       const response = await withTimeout(
         ai.models.generateContent({
           model,
           contents: prompt,
-          config: {
-            systemInstruction: `${systemInstruction} Respuestas rápidas, hiper-concisas y directas (máximo 150 palabras). Ve al grano con métricas clave sin rodeos.`,
-            thinkingConfig: {
-              thinkingLevel: ThinkingLevel.LOW,
-            },
-          },
+          config,
         }),
-        3800
+        3200
       );
 
       if (response.text && response.text.trim().length > 0) {
         return response.text;
       }
     } catch (err: any) {
-      console.warn(`[Fast AI Engine on ${model}]:`, err?.message || err);
-      // If timed out or errored, proceed swiftly to next candidate or fallback
+      // Gracefully capture high demand (503/429) or timeouts and try next model
+      const isCapacityError = err?.status === 503 || err?.message?.includes("503") || err?.message?.includes("high demand");
+      if (isCapacityError) {
+        console.info(`[AI Model ${model} busy/high demand - routing to next fast candidate]`);
+      } else {
+        console.warn(`[Fast AI Engine on ${model}]:`, err?.message || err);
+      }
     }
   }
 
-  // Instant domain heuristic analysis if API call exceeds latency limit or is unavailable
+  // Instant domain heuristic analysis if external endpoints are temporarily congested
   return fallbackGenerator();
 }
 
