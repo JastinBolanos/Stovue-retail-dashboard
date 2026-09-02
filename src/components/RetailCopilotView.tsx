@@ -20,7 +20,9 @@ import {
   ShoppingCart,
   Download,
   Trash2,
-  ChevronRight
+  ChevronRight,
+  Tag,
+  Truck
 } from 'lucide-react';
 import { ProductSKU, StoreBranch, AbandonedCart, PurchaseOrder } from '../types';
 import { CopilotService } from '../core/services/copilotService';
@@ -95,7 +97,8 @@ Select an analytical macro or input your strategic query below to begin automate
   const quickMacros = [
     {
       id: 'macro-pl',
-      title: isEs ? '📊 Auditoría P&L & Runway' : '📊 P&L & Runway Audit',
+      icon: BarChart3,
+      title: isEs ? 'Auditoría P&L & Runway' : 'P&L & Runway Audit',
       desc: isEs ? 'Desglose de márgenes, velocidad y riesgo por nodo' : 'Margin breakdown, velocity and risk by node',
       prompt: isEs 
         ? 'AUDITORIA_EJECUTIVA: Realiza un análisis financiero integral de P&L, velocidad de ventas y runway de los 5 nodos logísticos. Identifica qué sucursal tiene mayor margen y qué categorías están en riesgo.'
@@ -104,7 +107,8 @@ Select an analytical macro or input your strategic query below to begin automate
     },
     {
       id: 'macro-markdown',
-      title: isEs ? '🏷️ Liquidación de Stock Lento' : '🏷️ Slow-Moving Clearance',
+      icon: Tag,
+      title: isEs ? 'Liquidación de Stock Lento' : 'Slow-Moving Clearance',
       desc: isEs ? 'Estrategia de descuento dinámico para liberar capital' : 'Dynamic markdown plan to release tied-up capital',
       prompt: isEs
         ? 'LIQUIDACION_STOCK: Identifica los SKUs con menor velocidad de venta y alto inventario. Propón una estrategia de descuento escalonado sin destruir el margen bruto.'
@@ -113,7 +117,8 @@ Select an analytical macro or input your strategic query below to begin automate
     },
     {
       id: 'macro-elasticity',
-      title: isEs ? '⚡ Simulación de Elasticidad' : '⚡ Elasticity Optimization',
+      icon: Zap,
+      title: isEs ? 'Simulación de Elasticidad' : 'Elasticity Optimization',
       desc: isEs ? 'Optimización de precios en SKUs de alta demanda' : 'Price hike calibration on high velocity SKUs',
       prompt: isEs
         ? 'ELASTICIDAD_PRECIOS: Simula un incremento de precio del +3.5% al +5% en los 3 SKUs de mayor velocidad de rotación. ¿Cuál es el impacto en EBITDA y riesgo de churn?'
@@ -122,7 +127,8 @@ Select an analytical macro or input your strategic query below to begin automate
     },
     {
       id: 'macro-funnel',
-      title: isEs ? '🛒 Diagnóstico Fuga Carritos' : '🛒 Checkout Dropout Audit',
+      icon: ShoppingCart,
+      title: isEs ? 'Diagnóstico Fuga Carritos' : 'Checkout Dropout Audit',
       desc: isEs ? 'Estrategia de recuperación para €' + abandonedValue.toLocaleString() : 'Recovery strategy for €' + abandonedValue.toLocaleString(),
       prompt: isEs
         ? `RECUPERACION_CARRITOS: Analiza los ${abandonedCarts.length} carritos abandonados (€${abandonedValue.toLocaleString()}). Diseña una campaña automatizada multicanal (Email + WhatsApp) con cupones dinámicos de expiración rápida.`
@@ -131,7 +137,8 @@ Select an analytical macro or input your strategic query below to begin automate
     },
     {
       id: 'macro-rebalance',
-      title: isEs ? '🚚 Rebalanceo Logístico Nodal' : '🚚 Inter-Node Rebalancing',
+      icon: Truck,
+      title: isEs ? 'Rebalanceo Logístico Nodal' : 'Inter-Node Rebalancing',
       desc: isEs ? 'Transferencias entre Almacén Central y Tiendas' : 'Stock transfers between Central Hub and Flagships',
       prompt: isEs
         ? 'REBALANCEO_LOGISTICO: Genera un plan de transferencias de inventario desde el Almacén Central hacia las tiendas Flagship para mitigar roturas de stock sin comprar nuevos lotes.'
@@ -177,11 +184,11 @@ Select an analytical macro or input your strategic query below to begin automate
           id: `a-err-${Date.now()}`,
           role: 'assistant',
           content: isEs
-            ? `### 📊 Reporte Analítico Local (Stovue Heuristic Core)
+            ? `### [REPORTE ANALÍTICO] Stovue Heuristic Core
 1. **P&L y Márgenes:** Margen medio saludable del 54.2%. El nodo Flagship Barcelona lidera el margen operativo con 58.4%.
 2. **Recomendación de Inventario:** 5 SKUs se encuentran por debajo del umbral de seguridad. Se recomienda emitir transferencias desde el Hub Central antes del cierre de turno.
 3. **Optimización de Precios:** Aplicar un incremento de +3.2% en smartphones y audio pro amortiguará los costos de transporte sin alterar la velocidad diaria.`
-            : `### 📊 Local Analytical Report (Stovue Heuristic Core)
+            : `### [ANALYTICAL REPORT] Stovue Heuristic Core
 1. **P&L & Margins:** Healthy average margin at 54.2%. Flagship Barcelona leads operating margin at 58.4%.
 2. **Supply Chain Audit:** 5 SKUs are beneath safety thresholds. Inter-hub transfer from Central Hub recommended prior to shift close.
 3. **Price Optimization:** A +3.2% calibration on smartphones and pro audio will absorb freight costs with zero velocity churn.`,
@@ -314,21 +321,25 @@ Select an analytical macro or input your strategic query below to begin automate
               <span className="text-[#00FF41] text-[9px]">{isEs ? 'SELECCIÓN RÁPIDA' : 'INSTANT TRIGGER'}</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-              {quickMacros.slice(0, 5).map(macro => (
-                <button
-                  key={macro.id}
-                  onClick={() => handleSendMessage(macro.prompt, macro.category)}
-                  disabled={isLoading}
-                  className="p-2 text-left bg-[#0D0D0D] hover:bg-[#151515] border border-[#222] hover:border-[#00FF41]/40 transition group cursor-pointer disabled:opacity-50"
-                >
-                  <div className="text-[11px] font-bold text-white group-hover:text-[#00FF41] truncate">
-                    {macro.title}
-                  </div>
-                  <div className="text-[9px] text-[#666] truncate mt-0.5">
-                    {macro.desc}
-                  </div>
-                </button>
-              ))}
+              {quickMacros.slice(0, 5).map(macro => {
+                const IconComponent = macro.icon;
+                return (
+                  <button
+                    key={macro.id}
+                    onClick={() => handleSendMessage(macro.prompt, macro.category)}
+                    disabled={isLoading}
+                    className="p-2 text-left bg-[#0D0D0D] hover:bg-[#151515] border border-[#222] hover:border-[#00FF41]/40 transition group cursor-pointer disabled:opacity-50"
+                  >
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-white group-hover:text-[#00FF41] truncate">
+                      <IconComponent className="h-3.5 w-3.5 text-[#00FF41] shrink-0" />
+                      <span className="truncate">{macro.title}</span>
+                    </div>
+                    <div className="text-[9px] text-[#666] truncate mt-0.5 pl-5">
+                      {macro.desc}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

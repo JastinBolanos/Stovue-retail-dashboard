@@ -6,7 +6,9 @@ import {
   Plus, 
   Loader2,
   CheckCircle2,
-  FileText
+  FileText,
+  Zap,
+  Clock
 } from 'lucide-react';
 import { ProductSKU, PurchaseOrder, StoreBranch } from '../types';
 import { CopilotService } from '../core/services/copilotService';
@@ -150,7 +152,7 @@ export const InventoryAlerts: React.FC<InventoryAlertsProps> = ({
           {isLoadingAI ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin text-[#00FF41]" />
           ) : (
-            <span className="text-[#00FF41]">⚡</span>
+            <Zap className="h-3.5 w-3.5 text-[#00FF41]" />
           )}
           <span>Execute AI Stock Diagnostic</span>
         </button>
@@ -314,12 +316,18 @@ export const InventoryAlerts: React.FC<InventoryAlertsProps> = ({
                 >
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-white font-mono">{po.poNumber}</span>
-                    <span className={`px-1.5 py-0.2 text-[9px] uppercase font-mono ${
+                    <span className={`px-1.5 py-0.5 text-[9px] uppercase font-mono inline-flex items-center gap-1 ${
                       isReceived ? 'bg-[#103319] text-[#00FF41] border border-[#00FF41]/40' :
                       isInTransit ? 'bg-[#2A2005] text-[#FFAA00] border border-[#FFAA00]/40' :
                       'bg-[#1A1A1A] text-[#888] border border-[#333]'
                     }`}>
-                      {isReceived ? '✓ Stock Ingested' : isInTransit ? '🚚 In Transit' : '⏳ Supplier Dispatched'}
+                      {isReceived ? (
+                        <>✓ Stock Ingested</>
+                      ) : isInTransit ? (
+                        <><Truck className="h-2.5 w-2.5" /> In Transit</>
+                      ) : (
+                        <><Clock className="h-2.5 w-2.5" /> Supplier Dispatched</>
+                      )}
                     </span>
                   </div>
 

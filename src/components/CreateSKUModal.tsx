@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { 
   Package, 
   X, 
-  Barcode
+  Barcode,
+  Zap
 } from 'lucide-react';
 import { ProductSKU, CategoryType, StoreBranch } from '../types';
 import confetti from 'canvas-confetti';
@@ -142,9 +143,9 @@ export const CreateSKUModal: React.FC<CreateSKUModalProps> = ({
                 <button
                   type="button"
                   onClick={handleGenerateSKUCode}
-                  className="text-[9px] text-[#00FF41] hover:underline uppercase"
+                  className="text-[9px] text-[#00FF41] hover:underline uppercase inline-flex items-center gap-1 cursor-pointer"
                 >
-                  ⚡ Auto-gen
+                  <Zap className="h-2.5 w-2.5" /> Auto-gen
                 </button>
               </div>
               <input

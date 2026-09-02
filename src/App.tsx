@@ -71,10 +71,8 @@ export default function App() {
         lowStockCount={lowStockCount}
         abandonedCartsCount={abandonedCartsCount}
         onOpenAICopilot={() => setIsCopilotOpen(true)}
-        onSimulateEvent={handleSimulateSaleEvent}
         onSwitchProfile={handleExitToWelcome}
         onNavigateTab={setActiveTab}
-        isSimulating={isSimulating}
       />
 
       {/* Main Layout (Sidebar + Content Stage) */}

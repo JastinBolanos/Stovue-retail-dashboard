@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   Boxes, 
   Store, 
-  Zap, 
   AlertTriangle, 
   ShoppingCart, 
   Bot, 
@@ -24,10 +23,8 @@ interface NavbarProps {
   lowStockCount: number;
   abandonedCartsCount: number;
   onOpenAICopilot: () => void;
-  onSimulateEvent: () => void;
   onSwitchProfile: () => void;
   onNavigateTab: (tab: string) => void;
-  isSimulating: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -38,10 +35,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   lowStockCount,
   abandonedCartsCount,
   onOpenAICopilot,
-  onSimulateEvent,
   onSwitchProfile,
-  onNavigateTab,
-  isSimulating
+  onNavigateTab
 }) => {
   const { t } = useLanguage();
   const currentBranch = branches.find(b => b.id === selectedBranchId) || branches[0];
@@ -93,22 +88,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Center: Search & Quick Live Simulation Trigger */}
+      {/* Center: Quick Alert Shortcuts */}
       <div className="flex items-center gap-2 sm:gap-3">
-        <button
-          id="btn-simulate-event"
-          onClick={onSimulateEvent}
-          disabled={isSimulating}
-          className="px-3 py-1 bg-[#0F0F11] hover:bg-[#16161A] text-white text-xs border border-[#333] hover:border-[#00FF41] transition-colors flex items-center gap-1.5 cursor-pointer"
-          title="Inyecta una transacción de compra o alerta en tiempo real al feed"
-        >
-          <Zap className={`h-3 w-3 text-[#00FF41] ${isSimulating ? 'animate-spin' : ''}`} />
-          <span className="hidden sm:inline text-[11px] uppercase tracking-wider font-bold">
-            {isSimulating ? t('nav.simulating') : t('nav.simulateOrder')}
-          </span>
-          <span className="sm:hidden text-[10px]">Sim</span>
-        </button>
-
         {/* Quick Shortcut to SKU Low Stock */}
         <button
           onClick={() => onNavigateTab('alerts')}

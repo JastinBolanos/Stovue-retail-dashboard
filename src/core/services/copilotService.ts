@@ -45,7 +45,7 @@ export class CopilotService {
       const lowStockCount = skus.filter(s => s.totalStock <= s.minStockAlert).length;
       const totalRev = branches.reduce((acc, b) => acc + b.revenueToday, 0);
       return {
-        reply: `### 📊 Diagnóstico Inteligente Stovue Copilot (Fast Stream)
+        reply: `### [DIAGNÓSTICO INTELIGENTE] Stovue Copilot (Fast Stream)
 **Consulta:** *"${question}"*
 
 - **Estado del Centro de Comando:** ${branches.length} nodos activos y sincronizados.
@@ -122,7 +122,7 @@ export class CopilotService {
     } catch (err) {
       console.warn('Stock diagnosis API unreachable, using fast fallback analysis', err);
       return {
-        analysis: `### ⚠️ Diagnóstico Operativo de Stock Crítico
+        analysis: `### [DIAGNÓSTICO OPERATIVO] Stock Crítico
 - **SKUs en riesgo detectados:** ${lowStockItems.length} de ${totalSkus} en catálogo central.
 - **Acción requerida:** Emitir órdenes de compra prioritarias para reabastecimiento en Hub Central y transferencias inmediatas entre nodos satélite.`
       };
