@@ -8,7 +8,18 @@
 > **Centro de Control y Comando de Operaciones Retail Omnicanal.** 
 > Plataforma empresarial de alta densidad (Supply Chain Intelligence) diseñada para orquestar redes logísticas multitienda. Unifica la telemetría transaccional en tiempo real, gestión masiva de inventario, prevención de roturas de stock y un pipeline automatizado impulsado por IA para la recuperación de ingresos.
 
-🌍 **[Ver Plataforma en Vivo (Producción) 🟢]** *(Enlace a Vercel/Netlify)*
+🌍 **[Ver Plataforma en Vivo (Producción) 🟢]** *https://stovue.vercel.app/*
+
+![Vista Previa de STOVUE Command Center](https://github.com/user-attachments/assets/9248444f-d77d-4842-a380-2e7269f6f67f)
+
+---
+
+## 🎥 Demostración de Operaciones Retail en Vivo
+
+**🎬 Panel de Control y Orquestación Logística**  
+Exploración de la terminal STOVUE: monitoreo omnicanal en tiempo real, gestión masiva de catálogo mediante carga de archivos (CSV), rebalanceo de inventario y ejecución del pipeline de recuperación de carritos mediante Inteligencia Artificial.
+
+https://github.com/user-attachments/assets/3b7c3799-8709-4c95-9ea8-cd06ec1c2c5a
 
 ---
 
