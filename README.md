@@ -5,113 +5,113 @@
 ![Architecture](https://img.shields.io/badge/architecture-DDD%20%7C%20Clean-success)
 ![Security](https://img.shields.io/badge/security-TLS_1.3-orange)
 
-> **Centro de Control y Comando de Operaciones Retail Omnicanal.** 
-> Plataforma empresarial de alta densidad (Supply Chain Intelligence) diseñada para orquestar redes logísticas multitienda. Unifica la telemetría transaccional en tiempo real, gestión masiva de inventario, prevención de roturas de stock y un pipeline automatizado impulsado por IA para la recuperación de ingresos.
+> **Omnichannel Retail Operations Command & Control Center.** 
+> High-density enterprise platform (Supply Chain Intelligence) engineered to orchestrate multi-store logistics networks. Unifies real-time transactional telemetry, bulk inventory governance, stockout prevention, and an automated AI-driven pipeline for revenue recovery.
 
-🌍 **[Ver Plataforma en Vivo (Producción) 🟢]** *https://stovue.vercel.app/*
+🌍 **[View Live Platform (Production) 🟢]** *https://stovue.vercel.app/*
 
-![Vista Previa de STOVUE Command Center](https://github.com/user-attachments/assets/9248444f-d77d-4842-a380-2e7269f6f67f)
+![STOVUE Command Center Preview](https://github.com/user-attachments/assets/9248444f-d77d-4842-a380-2e7269f6f67f)
 
 ---
 
-## 🎥 Demostración de Operaciones Retail en Vivo
+## 🎥 Live Retail Operations Demonstration
 
-**🎬 Panel de Control y Orquestación Logística**  
-Exploración de la terminal STOVUE: monitoreo omnicanal en tiempo real, gestión masiva de catálogo mediante carga de archivos (CSV), rebalanceo de inventario y ejecución del pipeline de recuperación de carritos mediante Inteligencia Artificial.
+**🎬 Control Panel and Logistics Orchestration**  
+STOVUE terminal walkthrough: real-time omnichannel monitoring, bulk catalog management via CSV file upload, inventory rebalancing, and execution of the AI-powered cart recovery pipeline.
 
 https://github.com/user-attachments/assets/3b7c3799-8709-4c95-9ea8-cd06ec1c2c5a
 
 ---
 
-## 🏗️ Arquitectura de Sistema y Stack Tecnológico
+## 🏗️ System Architecture & Tech Stack
 
-Este repositorio contiene la arquitectura de la aplicación cliente (Web/Edge) y el API Gateway analítico. Basado en **Clean Architecture & Domain-Driven Design (DDD)**, aísla la lógica de negocio en servicios puros de dominio. *(Nota: Por políticas de seguridad comercial, los repositorios de bases de datos transaccionales (ERP/POS) y microservicios de pasarela de pago permanecen privados).*
+This repository contains the client application architecture (Web/Edge) and the analytical API Gateway. Built on **Clean Architecture & Domain-Driven Design (DDD)**, it isolates business logic into pure domain services. *(Note: Due to commercial security policies, transactional database repositories (ERP/POS) and payment gateway microservices remain private).*
 
-- **Core Frontend & Gestión de Estado:**
-  - `react` (`^19.0.1`) & `react-dom` para orquestación de UI de alta frecuencia.
-  - `typescript` (`~5.8.2`) garantizando inmutabilidad en modelos de dominio (`sku.ts`, `cart.ts`, `order.ts`).
-  - `vite` (`^6.2.3`) como motor de compilación HMR ultrarrápido.
-- **Backend & Proxy API:**
-  - `express` (`^4.21.2`) operando como Gateway REST (`/api/ai/*`) para inferencia de datos.
-  - `esbuild` (`^0.25.0`) empaquetando el servidor en modo *standalone* (`dist/server.cjs`).
-- **Interfaz (Dark Industrial Terminal):**
-  - `tailwindcss` (`^4.1.14`) estructurando un diseño de alto contraste (`#050505` con acentos `#00FF41`).
-  - `recharts` (`^3.10.1`) para visualización reactiva de embudos y P&L.
-  - `motion` (`^12.23.24`) para micro-feedback en operaciones en lote.
-- **Motor de Inteligencia Analítica:**
-  - Integración con `@google/genai` (`^2.4.0`) implementando el modelo *Gemini 3.7 Flash* con una estrategia de contingencia heurística local (Fallback) para operar sin cuota de API.
-
----
-
-## 🚀 Módulos Operativos (Desplegados)
-
-### 📊 1. Telemetría y Mando Global (`DashboardOverview`)
-* **Monitor Transaccional:** Feed omnicanal en tiempo real (POS físico + E-commerce).
-* **Métricas de Rendimiento (KPIs):** Cálculo de Ticket Medio (AOV), volumen bruto de mercancía (GMV), tasas de conversión y valor retenido en carritos.
-
-### 📦 2. Gobernanza Masiva de Catálogo (`SKUManagement`)
-* **Motor de Operaciones en Lote (Bulk Actions):** Ajuste porcentual de precios dinámicos (Dynamic Pricing), cálculo de márgenes comerciales y bloqueos masivos.
-* **Control de Códigos y Trazabilidad:** Generador de EAN-13 integrado y motor bidireccional de ingesta/exportación vía archivos **CSV**.
-
-### 🚨 3. Cadena de Suministro y Órdenes de Compra (`InventoryAlerts`)
-* **Prevención de Roturas (Runway):** Detección de SKUs bajo el umbral de seguridad (Safety Stock) con alertas tempranas.
-* **Orquestación de POs:** Emisión automática de Órdenes de Compra a proveedores y rebalanceo de inventario (transferencias) entre nodos logísticos.
-
-### 💰 4. Pipeline de Recuperación de Ingresos (`AbandonedCarts`)
-* **Auditoría de Fugas:** Seguimiento del valor económico estancado por abandono de carritos.
-* **Campañas Generativas (IA):** Creación autónoma de secuencias de recuperación (Email/SMS) con cupones de expiración corta optimizados para conversión.
-
-### 🧠 5. Copilot Directivo y Nodos Multitienda (`RetailCopilotModal` & `BranchNetwork`)
-* **Auditor de Nodos:** Comparativa de rendimiento, control de aforo y ocupación logística por sucursal (Flagship Madrid, Boutique BCN, Hub Central).
-* **Asistente Ejecutivo (IA):** Macros analíticas de diagnóstico en un clic (Resumen P&L, liquidación de stock muerto, maximización de márgenes).
+- **Frontend Core & State Management:**
+  - `react` (`^19.0.1`) & `react-dom` for high-frequency UI orchestration.
+  - `typescript` (`~5.8.2`) ensuring immutability across domain models (`sku.ts`, `cart.ts`, `order.ts`).
+  - `vite` (`^6.2.3`) as the ultra-fast HMR build engine.
+- **Backend & API Proxy:**
+  - `express` (`^4.21.2`) operating as a REST Gateway (`/api/ai/*`) for data inference.
+  - `esbuild` (`^0.25.0`) bundling the server into a *standalone* executable (`dist/server.cjs`).
+- **Interface (Dark Industrial Terminal):**
+  - `tailwindcss` (`^4.1.14`) styling a high-contrast layout (`#050505` with `#00FF41` accents).
+  - `recharts` (`^3.10.1`) for reactive funnel and P&L data visualization.
+  - `motion` (`^12.23.24`) for fluid micro-feedback during bulk operations.
+- **Analytical Intelligence Engine:**
+  - Integration with `@google/genai` (`^2.4.0`) leveraging *Gemini* with a local heuristic fallback strategy to ensure full functionality even without API quota.
 
 ---
 
-## 💻 Guía de Despliegue y Auditoría (Entorno Local)
+## 🚀 Operational Modules (Deployed)
 
-Para ingenieros de datos o desarrolladores autorizados que requieran levantar el entorno de control en modo *Sandbox*:
+### 📊 1. Telemetry and Global Command (`DashboardOverview`)
+* **Transactional Monitor:** Real-time omnichannel feed (Physical POS + E-commerce).
+* **Performance Metrics (KPIs):** Average Order Value (AOV), Gross Merchandise Volume (GMV), conversion rates, and retained cart value.
 
-### 1. Clonar y Preparar el Entorno (Node.js v20+)
+### 📦 2. Bulk Catalog Governance (`SKUManagement`)
+* **Bulk Operations Engine:** Dynamic pricing percentage adjustments, profit margin calculations, and bulk status locks.
+* **Code Control & Traceability:** Integrated EAN-13 generator and bidirectional CSV import/export engine.
+
+### 🚨 3. Supply Chain & Purchase Orders (`InventoryAlerts`)
+* **Stockout Prevention (Runway):** Early-warning detection for SKUs below safety stock thresholds.
+* **PO Orchestration:** Automated supplier Purchase Order issuance and inter-branch inventory rebalancing.
+
+### 💰 4. Revenue Recovery Pipeline (`AbandonedCarts`)
+* **Leakage Audit:** Real-time tracking of stalled capital from abandoned checkouts.
+* **Generative Campaigns (AI):** Autonomous recovery sequence creation (Email/SMS) featuring conversion-optimized short-expiry discount codes.
+
+### 🧠 5. Executive Copilot & Multi-Branch Nodes (`RetailCopilotModal` & `BranchNetwork`)
+* **Node Auditor:** Performance benchmarking, occupancy, and logistics capacity tracking by location (Flagship Madrid, Boutique BCN, Central Hub).
+* **Executive Assistant (AI):** One-click diagnostic analytical macros (P&L summary, dead stock clearance, margin optimization).
+
+---
+
+## 💻 Deployment & Audit Guide (Local Environment)
+
+For data engineers or authorized developers setting up the control environment in *Sandbox* mode:
+
+### 1. Clone and Prepare the Environment (Node.js v20+)
 ```bash
-git clone [https://github.com/tu-usuario/stovue-retail-dashboard.git](https://github.com/tu-usuario/stovue-retail-dashboard.git)
+git clone https://github.com/tu-usuario/stovue-retail-dashboard.git
 cd stovue-retail-dashboard
 npm install
 ```
 
-### 2. Configurar el Motor de Inteligencia (Opcional)
-Copia el archivo base de configuración. (Nota: El sistema activará su motor heurístico local automáticamente si no se inyecta la API Key de Gemini, permitiendo operar el 100% de la plataforma).
+### 2. Configure the Intelligence Engine (Optional)
+Copy the base configuration file. (Note: The system automatically activates its local heuristic engine if no Gemini API Key is supplied, allowing 100% platform operation).
 
-```Bash
+```bash
 cp .env.example .env
 ```
-### ⚙️ 3. Herramientas de Integración y Despliegue (CI/CD)
+### ⚙️ 3. Integration & Deployment Tools (CI/CD)
 
-| Comando | Descripción de la Operación Pipeline |
+| Command | Pipeline Operation Description |
 | :--- | :--- |
-| `npm run dev` | Inicia el entorno dual (Cliente Vite + Servidor Express) en `http://localhost:3000`. |
-| `npm run build` | Compila el frontend estático y empaqueta el backend optimizado mediante `esbuild`. |
-| `npm start` | Inicia el servidor de producción renderizando los artefactos listos para CDN. |
+| `npm run dev` | Starts the dual development environment (Vite Client + Express Server) at `http://localhost:3000`. |
+| `npm run build` | Builds the static frontend bundle and compiles the optimized backend using `esbuild`. |
+| `npm start` | Boots the production server serving CDN-ready deployment artifacts. |
 
 ---
 
-### 📂 4. Arquitectura de Dominio (Tree)
+### 📂 4. Domain Architecture (Tree)
 
 ```text
 src/
 ├── core/
-│   ├── domain/               # Modelos de dominio inmutables (SKU, Branch, Cart)
-│   ├── services/             # Servicios de lógica pura (Telemetry, CSV, Copilot)
-│   └── utils/                # Generadores EAN-13 y formateadores de divisas
+│   ├── domain/               # Immutable domain models (SKU, Branch, Cart)
+│   ├── services/             # Pure business logic services (Telemetry, CSV, Copilot)
+│   └── utils/                # EAN-13 barcode generators and currency formatters
 ├── context/
-│   └── LanguageContext.tsx   # Motor de internacionalización (i18n ES/EN)
+│   └── LanguageContext.tsx   # Internationalization engine (i18n ES/EN)
 ├── hooks/
-│   └── useRetailEngine.ts    # Orquestador reactivo global de la tienda
+│   └── useRetailEngine.ts    # Global reactive store orchestrator
 └── components/
-    ├── DashboardOverview.tsx # Telemetría de negocio y embudos
-    ├── SKUManagement.tsx     # Ingesta masiva CSV y Control de Precios
-    ├── InventoryAlerts.tsx   # POs y Rebalanceo Inter-Sucursales
-    ├── AbandonedCarts.tsx    # Generación de campañas AI (Email/SMS)
-    └── RetailCopilotModal.tsx# Consola del Asistente Ejecutivo Directivo
+    ├── DashboardOverview.tsx # Business telemetry and conversion funnels
+    ├── SKUManagement.tsx     # Bulk CSV ingestion and price governance
+    ├── InventoryAlerts.tsx   # Purchase Orders and inter-branch rebalancing
+    ├── AbandonedCarts.tsx    # AI-powered recovery campaign generation (Email/SMS)
+    └── RetailCopilotModal.tsx# Executive Copilot management console
 ```
 ---
-  *Propiedad de Arquitectura de Software - Jastin Bolaños © 2026. Proyecto de Demostración Técnica Empresarial.*
+*Software Architecture Property - Jastin Bolaños © 2026. Enterprise Technical Showcase Project.*
