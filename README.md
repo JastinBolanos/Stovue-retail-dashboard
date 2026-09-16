@@ -1,18 +1,30 @@
-# 🛒 STOVUE — Enterprise Retail Command Center (v4.0.0-ENT)
+<div align="center">
+  <img alt="STOVUE Banner" src="https://github.com/user-attachments/assets/6709befb-c328-4154-a007-c287b8f5190e" width="70%" />
 
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Deployment](https://img.shields.io/badge/deployment-production-blue)
-![Architecture](https://img.shields.io/badge/architecture-DDD%20%7C%20Clean-success)
-![Security](https://img.shields.io/badge/security-TLS_1.3-orange)
+  <br>
 
-> **Omnichannel Retail Operations Command & Control Center.** 
+  <h3>Enterprise Retail Command Center (v4.0.0-ENT)</h3>
+
+  <p>
+    <img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build Status" />
+    <img src="https://img.shields.io/badge/deployment-production-blue" alt="Deployment" />
+    <img src="https://img.shields.io/badge/architecture-DDD%20%7C%20Clean-success" alt="Architecture" />
+    <img src="https://img.shields.io/badge/security-TLS_1.3-orange" alt="Security" />
+  </p>
+</div>
+
+<br>
+
+> **Omnichannel Retail Operations Command & Control Center.**  
 > High-density enterprise platform (Supply Chain Intelligence) engineered to orchestrate multi-store logistics networks. Unifies real-time transactional telemetry, bulk inventory governance, stockout prevention, and an automated AI-driven pipeline for revenue recovery.
 
-🌍 **[View Live Platform (Production) 🟢]** *https://stovue.vercel.app/*
+<br>
 
-![STOVUE Command Center Preview](https://github.com/user-attachments/assets/9248444f-d77d-4842-a380-2e7269f6f67f)
-
----
+<div align="center">
+  <h3>🌍 <b><a href="https://stovue.vercel.app/">View Live Platform (Production) 🟢</a></b></h3>
+  <br>
+  <img alt="STOVUE Preview" src="https://github.com/user-attachments/assets/9248444f-d77d-4842-a380-2e7269f6f67f" width="80%" />
+</div>
 
 ## 🎥 Live Retail Operations Demonstration
 
