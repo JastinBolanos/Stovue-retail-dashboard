@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="STOVUE Banner" src="https://github.com/user-attachments/assets/6709befb-c328-4154-a007-c287b8f5190e" width="70%" />
+  <img alt="STOVUE Banner" src="https://github.com/user-attachments/assets/6709befb-c328-4154-a007-c287b8f5190e" width="40%" />
 
   <br>
 
@@ -15,8 +15,8 @@
 
 <br>
 
-> **Omnichannel Retail Operations Command & Control Center.**  
-> High-density enterprise platform (Supply Chain Intelligence) engineered to orchestrate multi-store logistics networks. Unifies real-time transactional telemetry, bulk inventory governance, stockout prevention, and an automated AI-driven pipeline for revenue recovery.
+> **Omnichannel Retail Operations Dashboard & Interface Showcase.**  
+> A client-side operational dashboard engineered for multi-store retail monitoring. Demonstrates transactional visualization, bulk inventory management tools, stock threshold alerts, and automated customer recovery workflows.
 
 <br>
 
@@ -28,8 +28,8 @@
 
 ## 🎥 Live Retail Operations Demonstration
 
-**🎬 Control Panel and Logistics Orchestration**  
-STOVUE terminal walkthrough: real-time omnichannel monitoring, bulk catalog management via CSV file upload, inventory rebalancing, and execution of the AI-powered cart recovery pipeline.
+**🎬 Dashboard Walkthrough & Operations Flow**  
+STOVUE interface demonstration: real-time sales feed visualization, batch inventory editing via CSV upload, inter-branch stock monitoring, and the cart recovery workflow interface.
 
 https://github.com/user-attachments/assets/3b7c3799-8709-4c95-9ea8-cd06ec1c2c5a
 
@@ -37,45 +37,45 @@ https://github.com/user-attachments/assets/3b7c3799-8709-4c95-9ea8-cd06ec1c2c5a
 
 ## 🏗️ System Architecture & Tech Stack
 
-This repository contains the client application architecture (Web/Edge) and the analytical API Gateway. Built on **Clean Architecture & Domain-Driven Design (DDD)**, it isolates business logic into pure domain services. *(Note: Due to commercial security policies, transactional database repositories (ERP/POS) and payment gateway microservices remain private).*
+This repository focuses on the web client interface and supporting API gateway. Designed with structured domain separation and clean architecture patterns, it decouples presentation components from domain calculation services.
 
 - **Frontend Core & State Management:**
-  - `react` (`^19.0.1`) & `react-dom` for high-frequency UI orchestration.
-  - `typescript` (`~5.8.2`) ensuring immutability across domain models (`sku.ts`, `cart.ts`, `order.ts`).
-  - `vite` (`^6.2.3`) as the ultra-fast HMR build engine.
-- **Backend & API Proxy:**
-  - `express` (`^4.21.2`) operating as a REST Gateway (`/api/ai/*`) for data inference.
-  - `esbuild` (`^0.25.0`) bundling the server into a *standalone* executable (`dist/server.cjs`).
-- **Interface (Dark Industrial Terminal):**
-  - `tailwindcss` (`^4.1.14`) styling a high-contrast layout (`#050505` with `#00FF41` accents).
-  - `recharts` (`^3.10.1`) for reactive funnel and P&L data visualization.
-  - `motion` (`^12.23.24`) for fluid micro-feedback during bulk operations.
-- **Analytical Intelligence Engine:**
-  - Integration with `@google/genai` (`^2.4.0`) leveraging *Gemini* with a local heuristic fallback strategy to ensure full functionality even without API quota.
+  - `react` (`^19.0.1`) & `react-dom` for responsive dashboard view rendering.
+  - `typescript` (`~5.8.2`) providing static typing across data models (`sku.ts`, `cart.ts`, `order.ts`).
+  - `vite` (`^6.2.3`) for efficient development serving and bundling.
+- **Backend & Gateway Layer:**
+  - `express` (`^4.21.2`) operating as a lightweight API gateway (`/api/ai/*`) for analytical requests.
+  - `esbuild` (`^0.25.0`) bundling the server into a compact production build (`dist/server.cjs`).
+- **Interface & Visual Design:**
+  - `tailwindcss` (`^4.1.14`) styled with a high-contrast dark terminal theme (`#050505` with `#00FF41` accent highlights).
+  - `recharts` (`^3.10.1`) for responsive funnel and performance data visualizations.
+  - `motion` (`^12.23.24`) for smooth feedback during batch updates and table interactions.
+- **Analytical Assistance:**
+  - Integration with `@google/genai` (`^2.4.0`) to generate contextual suggestions, paired with a local fallback engine to ensure reliable client functionality offline or without active API quotas.
 
 ---
 
 ## 🚀 Operational Modules (Deployed)
 
-### 📊 1. Telemetry and Global Command (`DashboardOverview`)
-* **Transactional Monitor:** Real-time omnichannel feed (Physical POS + E-commerce).
-* **Performance Metrics (KPIs):** Average Order Value (AOV), Gross Merchandise Volume (GMV), conversion rates, and retained cart value.
+### 📊 1. Overview Telemetry (`DashboardOverview`)
+* **Activity Feed:** Live simulated omnichannel transaction stream (POS and online store).
+* **Key Performance Indicators:** Real-time tracking of Average Order Value (AOV), Gross Merchandise Volume (GMV), conversion rates, and pending cart values.
 
-### 📦 2. Bulk Catalog Governance (`SKUManagement`)
-* **Bulk Operations Engine:** Dynamic pricing percentage adjustments, profit margin calculations, and bulk status locks.
-* **Code Control & Traceability:** Integrated EAN-13 generator and bidirectional CSV import/export engine.
+### 📦 2. Catalog & Inventory Management (`SKUManagement`)
+* **Batch Editing Tools:** Percentage-based price adjustments, margin calculations, and inventory status toggles.
+* **Product Identification:** Built-in EAN-13 barcode generation and bidirectional CSV data import/export.
 
-### 🚨 3. Supply Chain & Purchase Orders (`InventoryAlerts`)
-* **Stockout Prevention (Runway):** Early-warning detection for SKUs below safety stock thresholds.
-* **PO Orchestration:** Automated supplier Purchase Order issuance and inter-branch inventory rebalancing.
+### 🚨 3. Stock Level & Reorder Alerts (`InventoryAlerts`)
+* **Threshold Monitoring:** Early alerts for products reaching safety stock minimums.
+* **Reorder Coordination:** Interface workflows to prepare supplier purchase orders and balance stock across locations.
 
-### 💰 4. Revenue Recovery Pipeline (`AbandonedCarts`)
-* **Leakage Audit:** Real-time tracking of stalled capital from abandoned checkouts.
-* **Generative Campaigns (AI):** Autonomous recovery sequence creation (Email/SMS) featuring conversion-optimized short-expiry discount codes.
+### 💰 4. Cart Recovery Workflows (`AbandonedCarts`)
+* **Activity Tracking:** Clear visibility into uncompleted checkouts and stalled cart values.
+* **Communication Templates:** Structured generator for email and SMS recovery sequences featuring time-sensitive incentive codes.
 
-### 🧠 5. Executive Copilot & Multi-Branch Nodes (`RetailCopilotModal` & `BranchNetwork`)
-* **Node Auditor:** Performance benchmarking, occupancy, and logistics capacity tracking by location (Flagship Madrid, Boutique BCN, Central Hub).
-* **Executive Assistant (AI):** One-click diagnostic analytical macros (P&L summary, dead stock clearance, margin optimization).
+### 🧠 5. Analytical Assistant & Branch Network (`RetailCopilotModal` & `BranchNetwork`)
+* **Branch Overview:** Metrics comparison, occupancy estimates, and logistical capacity across locations (Flagship Madrid, Boutique BCN, Central Hub).
+* **Operational Assistant:** Quick diagnostic queries for sales overviews, aging inventory review, and margin summaries.
 
 ---
 
